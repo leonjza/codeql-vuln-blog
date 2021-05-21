@@ -15,7 +15,7 @@ on:
   push:
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master ]
+    #branches: [ master ]
   schedule:
     - cron: '20 21 * * 2'
 
@@ -39,6 +39,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

@@ -1,4 +1,7 @@
 coverage
-pytest
-flask
-werkzeug
+pytest~=6.2.3
+flask~=2.0.0rc1
+werkzeug~=2.0.0rc4
+Flask-HTTPAuth
+click~=7.1.2
+setuptools~=54.2.0

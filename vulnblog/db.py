@@ -1,7 +1,7 @@
 import sqlite3
 
 import click
-from flask import current_app, g
+from flask import current_app, g, abort
 from flask.cli import with_appcontext
 
 
@@ -28,6 +28,23 @@ def init_db():
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+
+
+def get_post(post_id, check_author=True):
+    post = get_db().execute(
+        'SELECT p.id, title, body, created, author_id, username'
+        ' FROM post p JOIN user u ON p.author_id = u.id'
+        ' WHERE p.id = ?',
+        (post_id,)
+    ).fetchone()
+
+    if post is None:
+        abort(404, f"Post id {post_id} doesn't exist")
+
+    if check_author and post['author_id'] != g.user['id']:
+        abort(403)
+
+    return post
 
 
 @click.command('init-db')

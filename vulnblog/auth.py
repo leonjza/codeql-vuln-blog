@@ -1,11 +1,32 @@
 import functools
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from vulnblog.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+api_auth = HTTPBasicAuth()
+
+
+@api_auth.verify_password
+def verify_password(username, password):
+    db = get_db()
+
+    user = db.execute(
+        'SELECT * FROM user WHERE username = ?', (username,)
+    ).fetchone()
+
+    if user is None:
+        return False
+    elif not check_password_hash(user['password'], password):
+        return False
+
+    g.user = user
+
+    return user
 
 
 def login_required(view):

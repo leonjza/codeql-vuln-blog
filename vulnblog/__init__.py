@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from vulnblog import db, auth, blog
+from vulnblog import db, auth, blog, api
 
 
 def create_app(test_config=None):
@@ -29,6 +29,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
+    app.register_blueprint(api.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app
